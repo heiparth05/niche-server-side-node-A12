@@ -23,9 +23,9 @@ async function run() {
     await client.connect();
     const database = client.db("motor-Mania");
 
-    // const sampleDataCollection = database.collection("sampleData");
     const allHelmetDataCollection = database.collection("allHelmetData");
-    // const exploreDataCollection = database.collection("exploreData");
+
+    const feedbackCollection = database.collection("allFeedback");
 
     //GET API 01.1 for allHelmetData
     app.get("/allHelmetData", async (req, res) => {
@@ -36,8 +36,6 @@ async function run() {
 
     //GET API 01.2 for checkout single product
     app.get("/allHelmetData/:id", async (req, res) => {
-      // console.log(req.params.id);
-
       const cursor = allHelmetDataCollection.find({
         _id: ObjectId(req.params.id),
       });
@@ -45,15 +43,19 @@ async function run() {
       res.send(allHelmetData[0]);
     });
 
+    // POST API 02.1 for add review in home page
+    app.post("/allFeedback", async (req, res) => {
+      const addFeedback = req.body;
+      const result = await feedbackCollection.insertOne(addFeedback);
+      res.json(result);
+    });
 
-    
-
-    //GET API 01.2 for exploreData
-    // app.get("/exploreData", async (req, res) => {
-    //   const cursor = exploreDataCollection.find({});
-    //   const exploreData = await cursor.toArray();
-    //   res.send(exploreData);
-    // });
+    //POST API 02.2 for show review in home page
+    app.get("/allFeedback", async (req, res) => {
+      const cursor = feedbackCollection.find({});
+      const feedbackData = await cursor.toArray();
+      res.send(feedbackData);
+    });
   } finally {
     //   await client.close();
   }
