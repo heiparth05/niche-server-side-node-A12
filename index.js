@@ -24,8 +24,8 @@ async function run() {
     const database = client.db("motor-Mania");
 
     const allHelmetDataCollection = database.collection("allHelmetData");
-
     const feedbackCollection = database.collection("allFeedback");
+    const orderCollection = database.collection("allOrders");
 
     //GET API 01.1 for allHelmetData
     app.get("/allHelmetData", async (req, res) => {
@@ -43,7 +43,7 @@ async function run() {
       res.send(allHelmetData[0]);
     });
 
-    // POST API 02.1 for add review in home page
+    // POST API 02.1 for add review mongo in home page
     app.post("/allFeedback", async (req, res) => {
       const addFeedback = req.body;
       const result = await feedbackCollection.insertOne(addFeedback);
@@ -55,6 +55,20 @@ async function run() {
       const cursor = feedbackCollection.find({});
       const feedbackData = await cursor.toArray();
       res.send(feedbackData);
+    });
+
+    // 03.1 add allOrder in mongo database
+    app.post("/allOrders", async (req, res) => {
+      const addOrders = req.body;
+      const result = await orderCollection.insertOne(addOrders);
+      res.json(result);
+    });
+
+    // 03.2 show order in ui
+    app.get("/allOrders", async (req, res) => {
+      const cursor = orderCollection.find({});
+      const ordersData = await cursor.toArray();
+      res.send(ordersData);
     });
   } finally {
     //   await client.close();
