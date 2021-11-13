@@ -68,7 +68,28 @@ async function run() {
     app.get("/allOrders", async (req, res) => {
       const cursor = orderCollection.find({});
       const ordersData = await cursor.toArray();
+      console.log(req.params.email);
+
       res.send(ordersData);
+    });
+
+    // app.get("/allOrders/:email", async (req, res) => {
+    //   const cursor = orderCollection.find({ email: req.params.email });
+    //   const ordersData = await cursor.toArray();
+
+    //   // console.log(ordersData);
+    //   console.log(req.params.email);
+
+    //   res.send(ordersData);
+    // });
+
+    // 04 delete ordered product
+    app.delete("/deleteOrder/:id", async (req, res) => {
+      const result = await orderCollection.deleteOne({
+        _id: ObjectId(req.params.id),
+      });
+      // console.log(result);
+      res.send(result);
     });
   } finally {
     //   await client.close();
