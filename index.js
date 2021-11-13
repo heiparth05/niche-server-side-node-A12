@@ -91,6 +91,13 @@ async function run() {
       // console.log(result);
       res.send(result);
     });
+
+
+    app.put("/admin",async (req, res) => {
+      const email = req.body
+    })
+
+
   } finally {
     //   await client.close();
   }
